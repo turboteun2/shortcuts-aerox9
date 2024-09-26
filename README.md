@@ -1,6 +1,4 @@
-# shortcuts-aerox9
-All kinds of shortcuts for a mouse with lots of buttons
-# Keyboard Automation Script
+# Keyboard Automation Script - for mouse with lots of buttons
 
 This Python script automates the use of keyboard shortcuts and application launches using the `keyboard` and `pyautogui` modules. It allows for the execution of specific tasks with function keys, including launching applications and performing keyboard macros in Excel.
 
