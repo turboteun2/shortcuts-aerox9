@@ -1,85 +1,62 @@
-# Start program in Windows Key + R - 'shell:startup' to start this script.
 import keyboard
 import os
-import keyboard
 import pyautogui
-import keyboard
 import time
 
 startApp = False
 
 def toggle_boolean(value):
+    """Toggles a boolean value."""
     return not value
 
 def start_app(key):
+    """Starts specific applications or runs commands based on the key pressed."""
     global startApp
-    # Start AFAS
-    if key == "f13":
-        os.startfile(r"")
-        startApp = False
-    # Start Paint
-    elif key == "f14":
-        os.startfile(r"")
-        startApp = False
-    # Start text file which is empty
-    elif key == "f15":
-        os.startfile(r"")
-        startApp = False
-    elif key == "f16":
-        os.startfile(r"")
-        startApp = False
-    elif key == "f17":
-        os.startfile(r"")
-        startApp = False
-    elif key == "f18":
-        os.startfile(r"")
-        startApp = False
-    elif key == "f19":
-        os.startfile(r"")
+    app_paths = {
+        "f13": r"",  # Add path for AFAS
+        "f14": r"",  # Add path for Paint
+        "f15": r"",  # Add path for text file
+        "f16": r"",
+        "f17": r"",
+        "f18": r"",
+        "f19": r""
+    }
+    
+    if key in app_paths:
+        os.startfile(app_paths[key])
         startApp = False
     elif key == "f20":
-        os.system("")
+        os.system("")  # Add system command if needed
         startApp = False
-        # quit()
 
-# Function to log key presses
+def excel_shortcuts(logging):
+    """Executes specific Excel shortcuts based on the key pressed."""
+    shortcuts = {
+        "f13": [('ctrl', 'shift', 'p'), ('ctrl', 'x'), ('ctrl', 'v')],
+        "f14": [('ctrl', 'shift', 't'), ('ctrl', 'x'), ('ctrl', 'v')],
+        "f15": [('ctrl', 'shift', 'm')],
+        "f16": [('ctrl', 'c'), ('ctrl', 'v')],
+    }
+
+    if logging in shortcuts:
+        for keys in shortcuts[logging]:
+            pyautogui.hotkey(*keys)
+            time.sleep(0.1)
+    elif logging == "f16":
+        pyautogui.hotkey('alt')
+        pyautogui.hotkey('w')
+
 def log_key_press(event):
+    """Logs key presses and triggers the corresponding action."""
     global startApp
-    logging = event.name
-    if logging == "f23":
-        startApp = toggle_boolean(startApp)
-    elif startApp == True:
-        start_app(logging)
-    else:
-        # Excel shortcuts, specify macro's
-        # print(f"{logging}")
-        if logging == "f13":
-            # Perform Ctrl + Shift + P
-            pyautogui.hotkey('ctrl', 'shift', 'p')
-            # time.sleep(0.1)  # Wait for the shortcut to execute
-            # Perform Ctrl + X
-            pyautogui.hotkey('ctrl', 'x')
-            # time.sleep(0.1)
-            # Perform Ctrl + V
-            pyautogui.hotkey('ctrl', 'v')
-        elif logging == "f14":
-            # Perform Ctrl + Shift + P
-            pyautogui.hotkey('ctrl', 'shift', 't')
-            # time.sleep(0.1)  # Wait for the shortcut to execute
-            # Perform Ctrl + X
-            pyautogui.hotkey('ctrl', 'x')
-            # time.sleep(0.1)
-            # Perform Ctrl + V
-            pyautogui.hotkey('ctrl', 'v')
-        elif logging == "f15":
-            pyautogui.hotkey('ctrl', 'shift', 'm')
-        elif logging == "f16":
-            pyautogui.hotkey('ctrl', 'c')
-            pyautogui.hotkey('ctrl', 'v')
-            time.sleep(.01)
-            pyautogui.hotkey('alt')
-            pyautogui.hotkey('w')
+    key = event.name
 
+    if key == "f23":
+        startApp = toggle_boolean(startApp)
+    elif startApp:
+        start_app(key)
+    else:
+        excel_shortcuts(key)
 
 # Register the callback for all key presses
 keyboard.on_press(log_key_press)
