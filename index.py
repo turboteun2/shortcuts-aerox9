@@ -4,6 +4,9 @@ import pyautogui
 import time
 
 startApp = False
+last_key = None
+last_key_time = 0
+debounce_time = 2
 
 def toggle_boolean(value):
     """Toggles a boolean value."""
@@ -13,13 +16,13 @@ def start_app(key):
     """Starts specific applications or runs commands based on the key pressed."""
     global startApp
     app_paths = {
-        "f13": r"",  # Add path for AFAS
-        "f14": r"",  # Add path for Paint
-        "f15": r"",  # Add path for text file
-        "f16": r"",
-        "f17": r"",
-        "f18": r"",
-        "f19": r""
+        "f13": r"C:/",  
+        "f15": r"C:/", 
+        "f14": r"C:/",   
+        "f16": r"C:/",
+        "f19": r"C:",
+        "f18": r"C:/", # <-- werkt niet
+        "f17": r"C:/"
     }
     
     if key in app_paths:
@@ -35,21 +38,33 @@ def excel_shortcuts(logging):
         "f13": [('ctrl', 'shift', 'p'), ('ctrl', 'x'), ('ctrl', 'v')],
         "f14": [('ctrl', 'shift', 't'), ('ctrl', 'x'), ('ctrl', 'v')],
         "f15": [('ctrl', 'shift', 'm')],
-        "f16": [('ctrl', 'c'), ('ctrl', 'v')],
+        "f16": [('ctrl', 'v')],
+        "f17": [],
+        "f18": [('ctrl', 'pgdn')],
+        "f19": [('ctrl', 'pgup')]
     }
 
     if logging in shortcuts:
         for keys in shortcuts[logging]:
             pyautogui.hotkey(*keys)
-            time.sleep(0.1)
+            time.sleep(0.2)
     elif logging == "f16":
         pyautogui.hotkey('alt')
         pyautogui.hotkey('w')
 
 def log_key_press(event):
-    """Logs key presses and triggers the corresponding action."""
-    global startApp
+    """Logs key presses and triggers the corresponding action with debounce protection."""
+    global startApp, last_key, last_key_time
     key = event.name
+
+    # Debounce mechanism: ignore if the key is the same as the last one and within the debounce time
+    current_time = time.time()
+    if key == last_key and (current_time - last_key_time) < debounce_time:
+        return  # Ignore repeated key presses within debounce time
+
+    # Update last key and time
+    last_key = key
+    last_key_time = current_time
 
     if key == "f23":
         startApp = toggle_boolean(startApp)
