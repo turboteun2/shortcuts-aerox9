@@ -12,25 +12,29 @@ def toggle_boolean(value):
     """Toggles a boolean value."""
     return not value
 
+# C:/Users/tgr/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB
+os.startfile(r"C:/Users/tgr/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB")
+
 def start_app(key):
     """Starts specific applications or runs commands based on the key pressed."""
     global startApp
     app_paths = {
-        "f13": r"C:/",  
-        "f15": r"C:/", 
-        "f14": r"C:/",   
-        "f16": r"C:/",
-        "f19": r"C:",
-        "f18": r"C:/", # <-- werkt niet
-        "f17": r"C:/"
+        "f13": r"C:/Users/tgr/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/AFAS Insite.lnk",  
+        "f15": r"C:/Users/tgr/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Microsoft OneNote.lnk", 
+        "f14": r"C:/Users/tgr/OneDrive - Eshuis Accountants en Adviseurs/Bureaublad/Microsoft Teams (work or school).lnk",   
+        "f16": r"C:/Users/tgr/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Microsoft Outlook.lnk",
+        "f19": r"C:/Users/tgr/AppData/Roaming/Microsoft/Excel/XLSTART/PERSONAL.XLSB",
+        "f18": r"C:/system32/notepad.exe", # <-- werkt niet
     }
     
     if key in app_paths:
         os.startfile(app_paths[key])
         startApp = False
-    elif key == "f20":
-        os.system("")  # Add system command if needed
-        startApp = False
+    elif key == "f17":
+        pyautogui.hotkey('ctrl', 'alt', 'c')
+    elif key == "f23":
+        # os.system("")  # Add system command if needed
+        toggle_boolean(startApp)
 
 def excel_shortcuts(logging):
     """Executes specific Excel shortcuts based on the key pressed."""
@@ -66,7 +70,7 @@ def log_key_press(event):
     last_key = key
     last_key_time = current_time
 
-    if key == "f23":
+    if key == "f20":
         startApp = toggle_boolean(startApp)
     elif startApp:
         start_app(key)
